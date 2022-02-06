@@ -5,7 +5,7 @@ import sqlite3
 import sys
 import os
 
-db_path = "/home/lantow/tekstannotering/test.db"
+db_path = "/home/golisto/tekstannotering/test.db"
 png_path = "-"
 
 app = Flask(__name__)
@@ -190,9 +190,9 @@ def annotering():
             
             else:
                 print("STAYING IN THE FUTURE")
-                #TODO: aktive_learning_annotation == ?? hvad skal der være lig med her?
+                #TODO: active_learning_annotation == ?? hvad skal der være lig med her?
                 sentlike, sent_id, pdf_name, page_nr = fetch_from_db(["sentlike", "sent_id", "pdf_name", "page_nr"], "annotations", 
-                                                            "korrekt_annotering IS null and aktive_learning_annotation = 2" , one=True)
+                                                            "korrekt_annotering IS null and active_learning_annotation = 2" , one=True)
             print("SENT SUPPOSED TO BE ON SCREEN")
             print(sentlike)
             update_history(session, sent_id)
@@ -258,10 +258,12 @@ def review():
                 for values in zip(hvem_verificerede, verifikationer, sent_ids):
                     verify_annotation(values, "annotations")
                     print(values)
-
+                    
+        print(session["username"])
         sentlikes = fetch_from_db(["sent_id", "sentlike", "korrekt_annotering", "udtræk"], "annotations",
                                     "korrekt_annotering NOT NULL AND hvem_verificerede IS NULL " +\
                                     f"AND hvem_annoterede <> '{session['username']}'", one=False)
+        print(sentlikes)
 
         return render_template("review.html", enumerated_sentlikes = enumerate(sentlikes), total=len(sentlikes), session=session)
     else:
@@ -275,4 +277,4 @@ def download_file(filename):
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug='True')
+    app.run(host='0.0.0.0', port=8090, debug='True')

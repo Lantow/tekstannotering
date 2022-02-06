@@ -24,7 +24,7 @@ query_string =  """CREATE TABLE annotations
                     udtræk VARCHAR(10),
                     hvem_verificerede CHAR(50),
                     verifikation CHAR(50),
-                    regex_annotering INT
+                    active_learning_annotation INT
                 );"""
 
 
@@ -35,7 +35,7 @@ conn.execute(query_string)
 def add_annotation(values):
         
     conn.execute(f"""
-        INSERT INTO annotations (sentlike, pdf_name, page_nr, regex_annotering)
+        INSERT INTO annotations (sentlike, pdf_name, page_nr, active_learning_annotation)
         VALUES (?, "eksempel.pdf", 0, 2)
     """, values)
     conn.commit()
