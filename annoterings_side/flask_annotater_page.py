@@ -1,17 +1,24 @@
 from flask import Flask, session, render_template, request, redirect, url_for, jsonify, send_from_directory, abort
-from simplepam import authenticate
 from datetime import timedelta
 from functools import wraps
 import sqlite3
 import sys
 import os
 
-db_path = "/var/RAPID_PROTOTYPEING/DATA/UDLAND/db_data/TC_annotations.db"
-png_path = "/var/RAPID_PROTOTYPEING/DATA/UDLAND/TC_Docouments/PNGDocuments"
+db_path = "/home/lantow/tekstannotering/test.db"
+png_path = "-"
 
 app = Flask(__name__)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=2)
 app.config["SESSION_COOKIE_SAMESITE"] = 'Strict'
+
+# ========================== Login ===============================
+names = ["annotater1", "annotater2", "annotater3"]
+def authenticate(name, pasw):
+    if name in names and pasw == "SECRET;)": #os.environ["ANNOTATION_PASS"]:
+        return(True)
+    else: 
+        return(False)
 
 # ===========================SQLite DB ===========================
 here = os.path.dirname(os.path.abspath(__file__))
@@ -183,8 +190,9 @@ def annotering():
             
             else:
                 print("STAYING IN THE FUTURE")
+                #TODO: aktive_learning_annotation == ?? hvad skal der være lig med her?
                 sentlike, sent_id, pdf_name, page_nr = fetch_from_db(["sentlike", "sent_id", "pdf_name", "page_nr"], "annotations", 
-                                                            "korrekt_annotering IS null and regex_annotering = 2" , one=True)
+                                                            "korrekt_annotering IS null and aktive_learning_annotation = 2" , one=True)
             print("SENT SUPPOSED TO BE ON SCREEN")
             print(sentlike)
             update_history(session, sent_id)
@@ -193,11 +201,7 @@ def annotering():
                                     sent=sentlike,
                                     sent_id=sent_id,
                                     png_name= f"{pdf_name}000{page_nr}-{page_nr}.png",
-                                    classes=["TIMELØN", "DAGSLØN", "UGELØN" ,"MÅNEDSLØN", "ÅRSLØN", 
-                                            "STARTDATO", "SLUTDATO", 
-                                            "FIRMANAVN", "FORNAVN", "EFTERNAVN",
-                                             "CVR", "CPR", 
-                                             "TVETYDIG", "SENERE_BRUG", "INTET"])
+                                    classes=["TEMPORAL", "FAKTURAL", "SOCIAL"])
         else:
             return redirect(url_for('login'))
 
