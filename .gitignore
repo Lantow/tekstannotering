@@ -1,7 +1,6 @@
 UN_annotation*
 py38*
 py36*
-prepare_data.py
 *.db
 
 
