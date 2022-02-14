@@ -65,15 +65,15 @@
   
   <table>
     <tr>
-      <th id="id">sent_id</th>
-      <th id="sent">Sentlike</th>
+      <th id="id">paragraph_id</th>
+      <th id="sent">paragraph_text</th>
       <th>Annotering</th>
       <th>udtræk</th>
       <th>Korrekt</th>
       <th>Tvetydig</th>
       <th>Ikke korrekt</th>
     </tr>
-    {% for i, row in enumerated_sentlikes %}
+    {% for i, row in enumerated_paragraph_texts %}
     <tr></tr>
       <td id="id">{{row[0]}}</td>
       <td id="sent">{{row[1]}}</td>
@@ -89,7 +89,7 @@
       <br><br>
       Antal kontrolerede:<br> 
       <p id="n_kontrolerede">0</p>
-      Antal sentlikes i alt:<br> 
+      Antal paragraph_texts i alt:<br> 
       <p>{{total}}</p>
     </div>
   </table>
@@ -124,27 +124,27 @@
       $("#sumbmitbtn button").fadeOut(500);
       $("#sumbmitbtn button").fadeIn(500);
 
-      var sent_ids = []
+      var paragraph_ids = []
       var hvem_verificerede = []
       var verifikationer = []
 
       $(":checkbox:checked").each(function(){
-        var sent_id = $(this).parents("td").siblings("#id").text()
+        var paragraph_id = $(this).parents("td").siblings("#id").text()
         var verifikation = $(this).attr("id")
         var w_nummer = '{{session["username"]}}'
 
-        sent_ids.push(sent_id)
+        paragraph_ids.push(paragraph_id)
         hvem_verificerede.push(w_nummer)
         verifikationer.push(verifikation)
       });
 
-      console.log(sent_ids, hvem_verificerede, verifikationer)
+      console.log(paragraph_ids, hvem_verificerede, verifikationer)
 
       $.ajax({
         type: "POST",
         contentType: "application/json;charset=utf-8",
         traditional: "true",
-        data: JSON.stringify({action, sent_ids, 
+        data: JSON.stringify({action, paragraph_ids, 
                               hvem_verificerede, 
                               verifikationer}),
         dataType: "json",
