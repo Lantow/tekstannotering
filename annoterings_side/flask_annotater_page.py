@@ -5,7 +5,7 @@ import sqlite3
 import sys
 import os
 
-db_path = "/home/lantow/tekstannotering/test.db"
+db_path = "/home/golisto/tekstannotering/test.db"
 png_path = "-"
 
 app = Flask(__name__)
@@ -262,6 +262,7 @@ def review():
         paragraph_texts = fetch_from_db(["paragraph_id", "paragraph_text", "korrekt_annotering", "udtræk"], "annotations",
                                     "korrekt_annotering NOT NULL AND hvem_verificerede IS NULL " +\
                                     f"AND hvem_annoterede <> '{session['username']}'", one=False)
+        print(sentlikes)
 
         return render_template("review.html", enumerated_paragraph_texts = enumerate(paragraph_texts), total=len(paragraph_texts), session=session)
     else:
@@ -275,4 +276,4 @@ def download_file(filename):
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug='True')
+    app.run(host='0.0.0.0', port=8090, debug='True')
